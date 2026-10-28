@@ -106,9 +106,9 @@ window.KLINBIT_PROOF = {
   /* ---------- 01. Configuración ---------- */
   var CONFIG = {
     emailDestino: 'contacto@klinbit.es',
-    // Para recibir el formulario sin abrir el correo del visitante, pega aquí el
-    // endpoint de un servicio de formularios (Formspree, Getform, tu backend…).
-    formEndpoint: ''
+    // Script que recibe el formulario. En Hostinger es contacto.php (incluido en el repositorio).
+    // Si no responde (p. ej. en GitHub Pages) se abre el correo del visitante como alternativa.
+    formEndpoint: 'contacto.php'
   };
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -198,16 +198,22 @@ window.KLINBIT_PROOF = {
       if (bad) { say(bad.type === 'checkbox' ? 'Para continuar, acepta la política de privacidad.' : 'Faltan tu nombre, el festival o un email válido.', 'err'); bad.focus(); return; }
       var fd = new FormData(form);
       track('form_submit', { method: CONFIG.formEndpoint ? 'endpoint' : 'mailto' });
-      if (CONFIG.formEndpoint) {
-        var btn = $('button[type="submit"]', form); btn.disabled = true; say('Enviando…', '');
-        fetch(CONFIG.formEndpoint, { method: 'POST', body: fd, headers: { Accept: 'application/json' } })
-          .then(function (r) { if (!r.ok) throw new Error(r.status); form.reset(); say('Recibido. Te escribimos en breve para proponerte una fecha.', 'ok'); })
-          .catch(function () { say('No hemos podido enviarlo. Escríbenos a ' + CONFIG.emailDestino + '.', 'err'); })
-          .then(function () { btn.disabled = false; });
-      } else {
+      // Alternativa sin servidor: abre el correo del visitante con el mensaje redactado
+      var abrirCorreo = function () {
         window.location.href = 'mailto:' + CONFIG.emailDestino + '?subject=' + encodeURIComponent('Reunión · ' + fd.get('evento')) + '&body=' + encodeURIComponent(body(fd));
         say('Preparando tu correo. Si no se abre, escríbenos a ' + CONFIG.emailDestino + '.', 'ok');
-      }
+      };
+      if (!CONFIG.formEndpoint) { abrirCorreo(); return; }
+      var btn = $('button[type="submit"]', form); btn.disabled = true; say('Enviando…', '');
+      fetch(CONFIG.formEndpoint, { method: 'POST', body: fd, headers: { Accept: 'application/json' } })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { status: r.status, ok: r.ok && d.ok === true, error: d.error }; }); })
+        .then(function (res) {
+          if (res.ok) { form.reset(); say('Recibido. Te escribimos en breve para proponerte una fecha.', 'ok'); }
+          else if (res.status === 400 || res.status === 429) { say(res.error || 'No hemos podido enviarlo. Inténtalo de nuevo.', 'err'); }
+          else { abrirCorreo(); }                       // sin PHP (p. ej. GitHub Pages) o fallo del servidor
+        })
+        .catch(abrirCorreo)
+        .then(function () { btn.disabled = false; });
     });
   }
 
