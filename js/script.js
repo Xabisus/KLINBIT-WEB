@@ -108,7 +108,7 @@ window.KLINBIT_PROOF = {
     emailDestino: 'contacto@klinbit.es',
     // Clave de acceso de Web3Forms (https://web3forms.com). Es pública por diseño: se genera con el
     // correo que debe recibir los mensajes. Mientras esté vacía, el formulario abre el correo del visitante.
-    web3formsKey: ''
+    web3formsKey: 'f83e246c-9f6b-4a20-9faf-93c5fa640007'
   };
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
