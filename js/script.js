@@ -106,10 +106,9 @@ window.KLINBIT_PROOF = {
   /* ---------- 01. Configuración ---------- */
   var CONFIG = {
     emailDestino: 'contacto@klinbit.es',
-    // Script que recibe el formulario.
-    //  · '' (vacío)      → GitHub Pages: se abre el correo del visitante con el mensaje redactado.
-    //  · 'contacto.php'  → solo con hosting PHP (Hostinger): envía el correo directamente.
-    formEndpoint: ''
+    // Clave de acceso de Web3Forms (https://web3forms.com). Es pública por diseño: se genera con el
+    // correo que debe recibir los mensajes. Mientras esté vacía, el formulario abre el correo del visitante.
+    web3formsKey: ''
   };
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -198,22 +197,27 @@ window.KLINBIT_PROOF = {
       });
       if (bad) { say(bad.type === 'checkbox' ? 'Para continuar, acepta la política de privacidad.' : 'Faltan tu nombre, el festival o un email válido.', 'err'); bad.focus(); return; }
       var fd = new FormData(form);
-      track('form_submit', { method: CONFIG.formEndpoint ? 'endpoint' : 'mailto' });
-      // Alternativa sin servidor: abre el correo del visitante con el mensaje redactado
+      track('form_submit', { method: CONFIG.web3formsKey ? 'web3forms' : 'mailto' });
+      // Alternativa sin servicio: abre el correo del visitante con el mensaje redactado
       var abrirCorreo = function () {
         window.location.href = 'mailto:' + CONFIG.emailDestino + '?subject=' + encodeURIComponent('Reunión · ' + fd.get('evento')) + '&body=' + encodeURIComponent(body(fd));
         say('Preparando tu correo. Si no se abre, escríbenos a ' + CONFIG.emailDestino + '.', 'ok');
       };
-      if (!CONFIG.formEndpoint) { abrirCorreo(); return; }
+      if (!CONFIG.web3formsKey) { abrirCorreo(); return; }
       var btn = $('button[type="submit"]', form); btn.disabled = true; say('Enviando…', '');
-      fetch(CONFIG.formEndpoint, { method: 'POST', body: fd, headers: { Accept: 'application/json' } })
-        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { status: r.status, ok: r.ok && d.ok === true, error: d.error }; }); })
-        .then(function (res) {
-          if (res.ok) { form.reset(); say('Recibido. Te escribimos en breve para proponerte una fecha.', 'ok'); }
-          else if (res.status === 400 || res.status === 429) { say(res.error || 'No hemos podido enviarlo. Inténtalo de nuevo.', 'err'); }
-          else { abrirCorreo(); }                       // sin PHP (p. ej. GitHub Pages) o fallo del servidor
+      var texto = ['Festival / evento: ' + fd.get('evento'), '', (fd.get('mensaje') || '').trim() || '(Sin mensaje)'].join('\n');
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ access_key: CONFIG.web3formsKey, subject: 'Reunión · ' + fd.get('evento'), from_name: 'Web Klinbit',
+          name: fd.get('nombre'), email: fd.get('email'), message: texto, botcheck: '' })
+      })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return r.ok && d.success === true; }); })
+        .then(function (ok) {
+          if (ok) { form.reset(); say('Recibido. Te escribimos en breve para proponerte una fecha.', 'ok'); }
+          else { abrirCorreo(); }                    // clave no válida, cuota agotada o servicio caído
         })
-        .catch(abrirCorreo)
+        .catch(abrirCorreo)                           // sin conexión o bloqueado por un antivirus/extension
         .then(function () { btn.disabled = false; });
     });
   }
