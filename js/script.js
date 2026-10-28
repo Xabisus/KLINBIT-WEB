@@ -106,9 +106,10 @@ window.KLINBIT_PROOF = {
   /* ---------- 01. Configuración ---------- */
   var CONFIG = {
     emailDestino: 'contacto@klinbit.es',
-    // Script que recibe el formulario. En Hostinger es contacto.php (incluido en el repositorio).
-    // Si no responde (p. ej. en GitHub Pages) se abre el correo del visitante como alternativa.
-    formEndpoint: 'contacto.php'
+    // Script que recibe el formulario.
+    //  · '' (vacío)      → GitHub Pages: se abre el correo del visitante con el mensaje redactado.
+    //  · 'contacto.php'  → solo con hosting PHP (Hostinger): envía el correo directamente.
+    formEndpoint: ''
   };
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
