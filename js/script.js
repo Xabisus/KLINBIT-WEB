@@ -198,27 +198,37 @@ window.KLINBIT_PROOF = {
       if (bad) { say(bad.type === 'checkbox' ? 'Para continuar, acepta la política de privacidad.' : 'Faltan tu nombre, el festival o un email válido.', 'err'); bad.focus(); return; }
       var fd = new FormData(form);
       track('form_submit', { method: CONFIG.web3formsKey ? 'web3forms' : 'mailto' });
-      // Alternativa sin servicio: abre el correo del visitante con el mensaje redactado
-      var abrirCorreo = function () {
-        window.location.href = 'mailto:' + CONFIG.emailDestino + '?subject=' + encodeURIComponent('Reunión · ' + fd.get('evento')) + '&body=' + encodeURIComponent(body(fd));
+      var enlaceCorreo = 'mailto:' + CONFIG.emailDestino + '?subject=' + encodeURIComponent('Reunión · ' + fd.get('evento')) + '&body=' + encodeURIComponent(body(fd));
+      // Sin clave configurada (solo en desarrollo): abre el correo del visitante con el mensaje redactado
+      if (!CONFIG.web3formsKey) {
+        window.location.href = enlaceCorreo;
         say('Preparando tu correo. Si no se abre, escríbenos a ' + CONFIG.emailDestino + '.', 'ok');
-      };
-      if (!CONFIG.web3formsKey) { abrirCorreo(); return; }
+        return;
+      }
       var btn = $('button[type="submit"]', form); btn.disabled = true; say('Enviando…', '');
+      // Si el envío falla NO se abre el correo por sorpresa: se explica y se ofrece como opción
+      var fallo = function (motivo) {
+        if (window.console) console.warn('[Klinbit] El formulario no se pudo enviar:', motivo);
+        status.className = 'form__status is-err'; status.textContent = 'No hemos podido enviar tu mensaje. Inténtalo de nuevo o ';
+        var a = document.createElement('a'); a.href = enlaceCorreo; a.textContent = 'escríbenos por correo'; status.appendChild(a); status.appendChild(document.createTextNode('.'));
+      };
+      var control = window.AbortController ? new AbortController() : null;
+      var limite = setTimeout(function () { if (control) control.abort(); }, 15000);
       var texto = ['Festival / evento: ' + fd.get('evento'), '', (fd.get('mensaje') || '').trim() || '(Sin mensaje)'].join('\n');
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ access_key: CONFIG.web3formsKey, subject: 'Reunión · ' + fd.get('evento'), from_name: 'Web Klinbit',
-          name: fd.get('nombre'), email: fd.get('email'), message: texto, botcheck: '' })
+          name: fd.get('nombre'), email: fd.get('email'), message: texto }),
+        signal: control ? control.signal : undefined
       })
-        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return r.ok && d.success === true; }); })
-        .then(function (ok) {
-          if (ok) { form.reset(); say('Recibido. Te escribimos en breve para proponerte una fecha.', 'ok'); }
-          else { abrirCorreo(); }                    // clave no válida, cuota agotada o servicio caído
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok && d.success === true, status: r.status, msg: d.message }; }); })
+        .then(function (res) {
+          if (res.ok) { form.reset(); say('Recibido. Te escribimos en breve para proponerte una fecha.', 'ok'); track('form_sent', {}); }
+          else { fallo('HTTP ' + res.status + ' · ' + (res.msg || 'sin mensaje')); }
         })
-        .catch(abrirCorreo)                           // sin conexión o bloqueado por un antivirus/extension
-        .then(function () { btn.disabled = false; });
+        .catch(function (err) { fallo((err && err.message) || 'sin conexión o bloqueado'); })
+        .then(function () { clearTimeout(limite); btn.disabled = false; });
     });
   }
 

@@ -383,6 +383,7 @@ html.has-pin .index { display: grid; grid-column: 1 / span 7; grid-row: 4; grid-
 .legal a { color: var(--paper); }
 .form__send { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; }
 .form__status { font-size: .95rem; min-height: 1.4em; }
+.form__status a { color: inherit; text-underline-offset: 3px; }
 .form__status.is-ok { color: var(--teal); } .form__status.is-err { color: #ff8f86; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
