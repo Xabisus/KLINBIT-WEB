@@ -108,7 +108,11 @@ window.KLINBIT_PROOF = {
     emailDestino: 'contacto@klinbit.es',
     // Clave de acceso de Web3Forms (https://web3forms.com). Es pública por diseño: se genera con el
     // correo que debe recibir los mensajes. Mientras esté vacía, el formulario abre el correo del visitante.
-    web3formsKey: 'f83e246c-9f6b-4a20-9faf-93c5fa640007'
+    web3formsKey: 'f83e246c-9f6b-4a20-9faf-93c5fa640007',
+    // Analítica. Rellena UNO de los dos con tu identificador real (ver seo-interno/06-analitica.md).
+    // Mientras estén vacíos no se carga ningún script de terceros. Solo se cargan si el visitante acepta las cookies.
+    ga4Id: '',   // p. ej. 'G-XXXXXXXXXX' (Google Analytics 4, sin Tag Manager)
+    gtmId: ''    // p. ej. 'GTM-XXXXXXX' (Google Tag Manager; si lo usas, deja ga4Id vacío)
   };
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -224,7 +228,7 @@ window.KLINBIT_PROOF = {
       })
         .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok && d.success === true, status: r.status, msg: d.message }; }); })
         .then(function (res) {
-          if (res.ok) { form.reset(); say('Recibido. Te escribimos en breve para proponerte una fecha.', 'ok'); track('form_sent', {}); }
+          if (res.ok) { form.reset(); say('Recibido. Te escribimos en breve para proponerte una fecha.', 'ok'); track('form_sent', {}); track('generate_lead', { form: 'reunion' }); }
           else { fallo('HTTP ' + res.status + ' · ' + (res.msg || 'sin mensaje')); }
         })
         .catch(function (err) { fallo((err && err.message) || 'sin conexión o bloqueado'); })
@@ -262,17 +266,47 @@ window.KLINBIT_PROOF = {
     $$('[data-cookie-open]').forEach(function (b) { b.addEventListener('click', function () { showBanner(true); var f = $('[data-cookie-choice]', banner); if (f) f.focus({ preventScroll: true }); }); });
   }
 
-  /* ---------- 07b. Medición de CTAs (solo con consentimiento) ---------- */
+  /* ---------- 07b. Analítica (GA4 / GTM) y medición de eventos ----------
+     Nada se carga ni se envía sin consentimiento. Eventos: cta_click, email_click, phone_click,
+     outbound_click, form_submit (intento válido) y generate_lead (solicitud enviada = conversión). */
+  var analyticsLoaded = false;
+  function loadAnalytics() {
+    if (analyticsLoaded || !window.KLINBIT_CONSENT || !window.KLINBIT_CONSENT.analytics) return;
+    var id = CONFIG.gtmId || CONFIG.ga4Id;
+    if (!id) return;
+    analyticsLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    var s = document.createElement('script'); s.async = true;
+    if (CONFIG.gtmId) {
+      window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      s.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(CONFIG.gtmId);
+    } else {
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', CONFIG.ga4Id, { anonymize_ip: true });
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(CONFIG.ga4Id);
+    }
+    document.head.appendChild(s);
+  }
+  loadAnalytics();
+  document.addEventListener('klinbit:consent', loadAnalytics);
+
   function track(name, params) {
     if (!window.KLINBIT_CONSENT || !window.KLINBIT_CONSENT.analytics) return;
     try {
-      if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
-      if (Array.isArray(window.dataLayer)) window.dataLayer.push(Object.assign({ event: name }, params || {}));
+      if (CONFIG.gtmId) { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: name }, params || {})); }
+      else if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
     } catch (_) { /* la analítica nunca debe romper la web */ }
   }
   document.addEventListener('click', function (e) {
-    var c = e.target.closest && e.target.closest('[data-cta]');
+    var t = e.target.closest && e.target.closest('a, button');
+    if (!t) return;
+    var c = t.closest('[data-cta]');
     if (c) track('cta_click', { location: c.getAttribute('data-cta') });
+    var h = t.tagName === 'A' ? (t.getAttribute('href') || '') : '';
+    if (/^mailto:/i.test(h)) track('email_click', { location: (c && c.getAttribute('data-cta')) || 'enlace' });
+    else if (/^tel:/i.test(h)) track('phone_click', { location: (c && c.getAttribute('data-cta')) || 'enlace' });
+    else if (/^https?:\/\//i.test(h) && t.hostname && t.hostname !== window.location.hostname) track('outbound_click', { destination: t.hostname });
   });
 
   /* ---------- 08. Pie ---------- */

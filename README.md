@@ -14,9 +14,14 @@ Se publica en GitHub Pages; no necesita servidor propio.
 /
 ├── index.html            Página principal (semántica, un comentario por sección)
 ├── CNAME                 Dominio personalizado para GitHub Pages (klinbit.es)
-├── aviso-legal.html      Página legal (pendiente de texto definitivo)
-├── privacidad.html       Página legal (pendiente de texto definitivo)
-├── cookies.html          Página legal (pendiente de texto definitivo)
+├── huella-de-carbono-festivales/       Página de servicio (SEO)
+├── estrategia-sostenibilidad-eventos/  Página de servicio (SEO)
+├── comunicacion-ambiental-festivales/  Página de servicio (SEO)
+├── aviso-legal.html      Texto legal trasladado de gakotc.com (Gako es la entidad responsable); revisar
+├── privacidad.html       Ídem
+├── cookies.html          Ídem (ver avisos en el código)
+├── 404.html · robots.txt · sitemap.xml
+├── seo-interno/          Auditoría, palabras clave, contenidos, enlaces, GBP y analítica (notas internas; son públicas en Pages si se publica la rama)
 ├── css/
 │   └── styles.css        Todos los estilos: tokens → base → componentes → secciones → responsive
 ├── js/
@@ -80,7 +85,9 @@ Web3Forms procesa los datos del formulario: hay que mencionarlo en la política 
 
 | Qué | Dónde |
 |---|---|
-| Textos legales definitivos | `aviso-legal.html`, `privacidad.html`, `cookies.html` (ahora son páginas provisionales) |
+| Revisar textos legales | `aviso-legal.html`, `privacidad.html`, `cookies.html` (copiados de gakotc.com; ver comentarios `REVISAR`) |
+| IDs de analítica | `ga4Id` o `gtmId` en `CONFIG` de `js/script.js` (ver `seo-interno/06-analitica.md`) |
+| Sitemap | Añadir cada página nueva a `sitemap.xml` |
 | Clave de Web3Forms | `web3formsKey` en `js/script.js` (ver «Formulario de contacto») |
 | Caso de estudio, logos de clientes y equipo con foto | Datos al principio de `js/script.js` (módulo 1/4); las secciones se activan solas al rellenarlos |
 | Analítica (GA4 / GTM) | Cárgala solo al recibir el evento `klinbit:consent` o si `KLINBIT_CONSENT.analytics` es `true`. Sin consentimiento no se envía nada |
