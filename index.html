@@ -3,25 +3,184 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Klinbit | Menos huella para festivales y eventos culturales</title>
-  <meta name="description" content="Klinbit calcula la huella ambiental de tu festival, te ayuda a reducirla y deja los datos listos para que marcas y administraciones puedan comprobarlos.">
+  <title>Klinbit | Huella de carbono y sostenibilidad para festivales</title>
+  <meta name="description" content="Consultoría de sostenibilidad para festivales y eventos culturales: medimos tu huella de carbono, la reducimos y comunicamos los resultados sin greenwashing.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://klinbit.es/">
   <meta name="theme-color" content="#14120f">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Klinbit">
   <meta property="og:locale" content="es_ES">
+  <meta property="og:url" content="https://klinbit.es/">
   <meta property="og:title" content="Klinbit | Tu festival ya tiene huella. Ponle cifras.">
   <meta property="og:description" content="Medimos la huella ambiental de tu festival, te ayudamos a reducirla y dejamos los datos listos para enseñarlos.">
-  <link rel="icon" type="image/png" href="icons/favicon.png">
+  <meta property="og:image" content="https://klinbit.es/images/og-klinbit.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Klinbit: dibujo de un DJ entre dos altavoces gigantes frente a un público entregado">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Klinbit | Huella de carbono y sostenibilidad para festivales">
+  <meta name="twitter:description" content="Medimos la huella ambiental de tu festival, te ayudamos a reducirla y dejamos los datos listos para enseñarlos.">
+  <meta name="twitter:image" content="https://klinbit.es/images/og-klinbit.jpg">
+  <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon.png">
 
   <link rel="preload" href="fonts/archivo-black-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" type="image/webp" href="images/dj-publico-1200.webp" imagesrcset="images/dj-publico-800.webp 800w, images/dj-publico-1200.webp 1200w, images/dj-publico.webp 1968w" imagesizes="100vw" fetchpriority="high">
   <link rel="stylesheet" href="css/styles.css">
   <script>document.documentElement.classList.add('js');</script>
 
   <script type="application/ld+json">
-  { "@context": "https://schema.org", "@type": "Organization", "name": "Klinbit",
-    "description": "Consultoría de sostenibilidad para festivales y eventos culturales.",
-    "email": "contacto@klinbit.es",
-    "sameAs": ["https://www.linkedin.com/company/146596004/"] }
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://klinbit.es/#organization",
+        "name": "Klinbit",
+        "url": "https://klinbit.es/",
+        "logo": "https://klinbit.es/images/klinbit-logo-xl.webp",
+        "email": "contacto@klinbit.es",
+        "sameAs": [
+          "https://www.linkedin.com/company/146596004/"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://klinbit.es/#website",
+        "url": "https://klinbit.es/",
+        "name": "Klinbit",
+        "inLanguage": "es",
+        "publisher": {
+          "@id": "https://klinbit.es/#organization"
+        }
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://klinbit.es/#service",
+        "name": "Klinbit",
+        "url": "https://klinbit.es/",
+        "image": "https://klinbit.es/images/og-klinbit.jpg",
+        "description": "Consultoría de sostenibilidad para festivales y eventos culturales: cálculo de huella de carbono, estrategia de reducción y comunicación ambiental.",
+        "email": "contacto@klinbit.es",
+        "parent": {
+          "@id": "https://klinbit.es/#organization"
+        },
+        "areaServed": [
+          {
+            "@type": "Country",
+            "name": "España"
+          },
+          {
+            "@type": "AdministrativeArea",
+            "name": "País Vasco"
+          },
+          {
+            "@type": "AdministrativeArea",
+            "name": "Navarra"
+          }
+        ],
+        "knowsAbout": [
+          "Huella de carbono de festivales",
+          "Sostenibilidad en eventos",
+          "Comunicación ambiental",
+          "GHG Protocol",
+          "Greenwashing"
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Servicios de Klinbit",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Cálculo de la huella de carbono de festivales",
+                "url": "https://klinbit.es/huella-de-carbono-festivales/"
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Estrategia de sostenibilidad para eventos",
+                "url": "https://klinbit.es/estrategia-sostenibilidad-eventos/"
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Comunicación ambiental sin greenwashing",
+                "url": "https://klinbit.es/comunicacion-ambiental-festivales/"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "¿Cuánto trabajo supone para mi equipo?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "El mínimo. Reuniréis facturas y tickets y nos los enviaréis. El cálculo, el análisis y el informe corren de nuestra parte."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Qué estándares usáis?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "La norma ISO y el GHG Protocol, a través de la plataforma de Creast."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Puedo conocer la huella antes del festival?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sí. Antes de la edición prevemos la huella y estimamos cuánto CO2 evita cada acción que estés valorando."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Sirve para conseguir patrocinadores o subvenciones?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Está pensado para eso. El informe ESG y el dossier de patrocinio reúnen las pruebas que piden las marcas con presupuesto ESG y las líneas públicas de ayuda."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Y las emisiones que no se pueden evitar?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Se compensan con proyectos de reforestación. En la comunicación aparecen como compensación, nunca como un impacto que ha desaparecido."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Cómo comunico sin riesgo de greenwashing?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Con cifras reales detrás de cada mensaje y sin frases genéricas, que la Directiva (UE) 2024/825 ya no admite. Definimos contigo qué contar y con qué tono."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿En qué zonas trabajáis?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Con festivales y eventos de toda España, con especial foco en País Vasco y Navarra."
+            }
+          }
+        ]
+      }
+    ]
+  }
   </script>
 </head>
 
@@ -82,7 +241,7 @@
             <span class="ln"><span class="soft">Ponle cifras.</span></span>
           </h1>
           <div class="hero__side">
-            <p class="lead">Calculamos el impacto ambiental de tu festival, te ayudamos a reducirlo y dejamos los datos listos para que cualquier marca o administración pueda comprobarlos.</p>
+            <p class="lead">Calculamos la huella de carbono y el impacto ambiental de tu festival, te ayudamos a reducirlo y dejamos los datos listos para que cualquier marca o administración pueda comprobarlos.</p>
             <div class="hero__cta">
               <a class="btn btn--solid" href="#contacto" data-cta="hero" data-magnet data-hero-cta>Pedir reunión <span class="btn__arrow" aria-hidden="true">→</span></a>
               <a class="link" href="#informe" data-cta="hero-informe">Ver un informe por dentro <span class="link__ico" aria-hidden="true">↓</span></a>
@@ -91,7 +250,7 @@
         </div>
 
         <figure class="hero__art wipe" data-hero-art>
-          <img src="images/dj-publico.webp" width="1968" height="891" alt="Dibujo de un DJ tras la mesa, entre dos altavoces gigantes, frente a un público entregado" fetchpriority="high">
+          <img src="images/dj-publico-1200.webp" srcset="images/dj-publico-800.webp 800w, images/dj-publico-1200.webp 1200w, images/dj-publico.webp 1968w" sizes="100vw" width="1968" height="891" alt="Dibujo de un DJ tras la mesa, entre dos altavoces gigantes, frente a un público entregado" fetchpriority="high">
         </figure>
 
         <div class="hero__foot">
@@ -335,11 +494,12 @@
           <h2 class="h2 split">Preguntas concretas.</h2>
           <div class="faq__list rv">
             <details><summary>¿Cuánto trabajo supone para mi equipo?</summary><p class="faq__a">El mínimo. Reuniréis facturas y tickets y nos los enviaréis. El cálculo, el análisis y el informe corren de nuestra parte.</p></details>
-            <details><summary>¿Qué estándares usáis?</summary><p class="faq__a">La norma ISO y el GHG Protocol, a través de la plataforma de Creast.</p></details>
-            <details><summary>¿Puedo conocer la huella antes del festival?</summary><p class="faq__a">Sí. Antes de la edición prevemos la huella y estimamos cuánto CO<sub>2</sub> evita cada acción que estés valorando.</p></details>
+            <details><summary>¿Qué estándares usáis?</summary><p class="faq__a">La norma ISO y el GHG Protocol, a través de la plataforma de Creast. <a href="huella-de-carbono-festivales/">Cómo calculamos la huella</a>.</p></details>
+            <details><summary>¿Puedo conocer la huella antes del festival?</summary><p class="faq__a">Sí. Antes de la edición prevemos la huella y estimamos cuánto CO<sub>2</sub> evita cada acción que estés valorando. <a href="huella-de-carbono-festivales/">Más sobre el cálculo de la huella</a>.</p></details>
             <details><summary>¿Sirve para conseguir patrocinadores o subvenciones?</summary><p class="faq__a">Está pensado para eso. El informe ESG y el dossier de patrocinio reúnen las pruebas que piden las marcas con presupuesto ESG y las líneas públicas de ayuda.</p></details>
-            <details><summary>¿Y las emisiones que no se pueden evitar?</summary><p class="faq__a">Se compensan con proyectos de reforestación. En la comunicación aparecen como compensación, nunca como un impacto que ha desaparecido.</p></details>
-            <details><summary>¿Cómo comunico sin riesgo de greenwashing?</summary><p class="faq__a">Con cifras reales detrás de cada mensaje y sin frases genéricas, que la Directiva (UE) 2024/825 ya no admite. Definimos contigo qué contar y con qué tono.</p></details>
+            <details><summary>¿Y las emisiones que no se pueden evitar?</summary><p class="faq__a">Se compensan con proyectos de reforestación. En la comunicación aparecen como compensación, nunca como un impacto que ha desaparecido. <a href="estrategia-sostenibilidad-eventos/">Cómo planteamos la reducción</a>.</p></details>
+            <details><summary>¿Cómo comunico sin riesgo de greenwashing?</summary><p class="faq__a">Con cifras reales detrás de cada mensaje y sin frases genéricas, que la Directiva (UE) 2024/825 ya no admite. Definimos contigo qué contar y con qué tono. <a href="comunicacion-ambiental-festivales/">Cómo lo hacemos</a>.</p></details>
+            <details><summary>¿En qué zonas trabajáis?</summary><p class="faq__a">Con festivales y eventos de toda España, con especial foco en País Vasco y Navarra.</p></details>
           </div>
         </div>
       </div>
@@ -358,6 +518,9 @@
       <div class="wrap">
         <span>© <span data-year>2026</span> Klinbit</span>
         <nav aria-label="Pie">
+          <a href="huella-de-carbono-festivales/">Huella de carbono</a>
+          <a href="estrategia-sostenibilidad-eventos/">Estrategia</a>
+          <a href="comunicacion-ambiental-festivales/">Comunicación ambiental</a>
           <a href="mailto:contacto@klinbit.es">contacto@klinbit.es</a>
           <a href="https://www.linkedin.com/company/146596004/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (pestaña nueva)</span></a>
           <a href="aviso-legal.html">Aviso legal</a>
