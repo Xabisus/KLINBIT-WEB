@@ -111,7 +111,7 @@ window.KLINBIT_PROOF = {
     web3formsKey: 'f83e246c-9f6b-4a20-9faf-93c5fa640007',
     // Analítica. Rellena UNO de los dos con tu identificador real (ver seo-interno/06-analitica.md).
     // Mientras estén vacíos no se carga ningún script de terceros. Solo se cargan si el visitante acepta las cookies.
-    ga4Id: '',   // p. ej. 'G-XXXXXXXXXX' (Google Analytics 4, sin Tag Manager)
+    ga4Id: 'G-5CEK0ZKNJ2',   // GA4 (se carga solo tras aceptar cookies) (Google Analytics 4, sin Tag Manager)
     gtmId: ''    // p. ej. 'GTM-XXXXXXX' (Google Tag Manager; si lo usas, deja ga4Id vacío)
   };
   var $ = function (s, c) { return (c || document).querySelector(s); };
